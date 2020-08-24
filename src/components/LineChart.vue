@@ -45,11 +45,11 @@
           tooltips: {
             backgroundColor: '#4F5565',
             titleFontStyle: 'normal',
-            titleFontSize: 18,
+            titleFontSize: 14,
             bodyFontFamily: "'Proxima Nova', sans-serif",
             cornerRadius: 3,
             bodyFontColor: '#20C4C8',
-            bodyFontSize: 14,
+            bodyFontSize: 12,
             xPadding: 14,
             yPadding: 14,
             displayColors: false,
