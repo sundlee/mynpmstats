@@ -1,4 +1,4 @@
-export function removeDuplicate (a, b) {
+export function removeDuplicate(a, b) {
   if (a.indexOf(b) < 0) {
     a.push(b);
   }

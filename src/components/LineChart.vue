@@ -31,21 +31,20 @@
               gridLines: {
                 display: true,
                 color: '#EEF0F4',
-                borderDash: [5, 15]
+                // borderDash: [2, 4]
               }
             }],
             xAxes: [ {
               gridLines: {
                 display: true,
                 color: '#EEF0F4',
-                borderDash: [5, 15]
+                // borderDash: [2, 4]
               }
             }]
           },
           tooltips: {
             mode: 'interpolate',
             intersect: false,
-
             backgroundColor: '#4F5565',
             titleFontStyle: 'normal',
             titleFontSize: 12,
@@ -109,12 +108,12 @@
     },
     mounted () {
       this.gradient = this.$refs.canvas
-        .getContext('2d')
-        .createLinearGradient(0, 0, 0, 450)
+        .getContext('2d');
+        // .createLinearGradient(0, 0, 0, 450);
 
-      this.gradient.addColorStop(0, 'rgba(52, 217, 221, 0.6)')
-      this.gradient.addColorStop(0.5, 'rgba(52, 217, 221, 0.25)')
-      this.gradient.addColorStop(1, 'rgba(52, 217, 221, 0)')
+      // this.gradient.addColorStop(0, 'rgba(52, 217, 221, 0.6)')
+      // this.gradient.addColorStop(0.5, 'rgba(52, 217, 221, 0.25)')
+      // this.gradient.addColorStop(1, 'rgba(52, 217, 221, 0)')
 
       this.renderChart({
         labels: this.chartLabels,
@@ -128,9 +127,9 @@
             pointHoverBackgroundColor: '#fff',
             pointHoverRadius: 4,
             pointHitRadius: 10,
-            pointHoverBorderWidth: 1,
+            pointHoverBorderWidth: 2,
             borderWidth: 2,
-            backgroundColor: this.gradient,
+            // backgroundColor: this.gradient,
             fill: false,
             data: this.chartData
           }
@@ -138,20 +137,20 @@
       }, this.options)
     },
     methods: {
-      formatNumber (num) {
-        let numString = Math.round(num).toString()
-        let numberFormatMapping = [[6, 'm'], [3, 'k']]
+      formatNumber(num) {
+        let numString = Math.round(num).toString();
+        let numberFormatMapping = [[6, 'm'], [3, 'k']];
         for (let [numberOfDigits, replacement] of numberFormatMapping) {
           if (numString.length > numberOfDigits) {
-            let decimal = ''
+            let decimal = '';
             if (numString[numString.length - numberOfDigits] !== '0') {
-              decimal = '.' + numString[numString.length - numberOfDigits]
+              decimal = '.' + numString[numString.length - numberOfDigits];
             }
-            numString = numString.substr(0, numString.length - numberOfDigits) + decimal + replacement
-            break
+            numString = numString.substr(0, numString.length - numberOfDigits) + decimal + replacement;
+            break;
           }
         }
-        return numString
+        return numString;
       }
     }
   }
