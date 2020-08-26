@@ -48,7 +48,7 @@
 
             backgroundColor: '#4F5565',
             titleFontStyle: 'normal',
-            titleFontSize: 14,
+            titleFontSize: 12,
             bodyFontFamily: "'Proxima Nova', sans-serif",
             cornerRadius: 3,
             bodyFontColor: '#20C4C8',
@@ -56,8 +56,6 @@
             xPadding: 14,
             yPadding: 14,
             displayColors: false,
-            // mode: 'index',
-            // intersect: false,
             callbacks: {
               title: tooltipItem => {
                 return `🗓 ${tooltipItem[0].xLabel}`
@@ -131,8 +129,9 @@
             pointHoverRadius: 4,
             pointHitRadius: 10,
             pointHoverBorderWidth: 1,
-            borderWidth: 1,
+            borderWidth: 2,
             backgroundColor: this.gradient,
+            fill: false,
             data: this.chartData
           }
         ]
