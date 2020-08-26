@@ -82,7 +82,7 @@
             },
             crosshair: {
               line: {
-                color: '#454D55',  // crosshair line color
+                color: '#F66',  // crosshair line color
                 width: 1        // crosshair line width
               },
               sync: {
@@ -137,10 +137,6 @@
           }
         ]
       }, this.options)
-
-      setTimeout(() => {
-        this.download()
-      }, 500)
     },
     methods: {
       formatNumber (num) {

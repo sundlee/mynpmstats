@@ -19,7 +19,6 @@
         <datepicker input-class="Search__input" placeholder="Start Date" v-model="periodStart" name="start-date" v-on:selected="validateDataRequest()"></datepicker>
         <datepicker input-class="Search__input" placeholder="End Date" v-model="periodEnd" name="end-date" v-on:selected="validateDataRequest()"></datepicker>
       </div>
-
       <div class="error-message" v-if="showError">
        {{ errorMessage }}
       </div>
@@ -38,7 +37,6 @@
         <div class="sk-cube sk-cube9"></div>
       </div>
       </div>
-
       <package-info :package-name="packageName" :total-downloads="totalDownloads" :period="formattedPeriod" v-if="loaded"></package-info>
       <div class="Chart__container" v-if="loaded">
         <div class="Chart__title">
@@ -84,11 +82,11 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import Datepicker from 'vuejs-datepicker'
+  import axios from 'axios';
+  import Datepicker from 'vuejs-datepicker';
 
-  import LineChart from '@/components/LineChart'
-  import PackageInfo from '@/components/PackageInfo'
+  import LineChart from '@/components/LineChart';
+  import PackageInfo from '@/components/PackageInfo';
 
   import {
     dateToYear,
@@ -96,17 +94,17 @@
     dateToWeek,
     dateToDay,
     dateBeautify
-  } from '../utils/dateFormatter'
+  } from '../utils/dateFormatter';
 
-  import { removeDuplicate, groupData } from '../utils/downloadFormatter.js'
+  import { removeDuplicate, groupData } from '../utils/downloadFormatter.js';
 
   export default {
     components: {
       LineChart,
       PackageInfo,
-      Datepicker
+      Datepicker,
     },
-    data () {
+    data() {
       return {
         inputtedPackage: null,
         packageName: '',
@@ -126,104 +124,92 @@
         periodStart: '',
         periodEnd: new Date(),
         rawData: '',
-        totalDownloads: ''
+        totalDownloads: '',
       }
     },
-    mounted () {
+    mounted() {
       if (this.$route.params.package) {
-        this.inputtedPackage = this.$route.params.package
-        this.requestData()
+        this.inputtedPackage = this.$route.params.package;
+        this.requestData();
       }
     },
     computed: {
-      _endDate () {
-        return dateToDay(this.periodEnd)
+      _endDate() {
+        return dateToDay(this.periodEnd);
       },
-      _startDate () {
-        return dateToDay(this.periodStart)
+      _startDate() {
+        return dateToDay(this.periodStart);
       },
-      period () {
-        return this.periodStart ? `${this._startDate}:${this._endDate}` : 'last-month'
+      period() {
+        return this.periodStart ? `${this._startDate}:${this._endDate}` : 'last-month';
       },
-      formattedPeriod () {
+      formattedPeriod() {
         return this.periodStart ? `${dateBeautify(this._startDate)} - ${dateBeautify(this._endDate)}` : 'last-month'
       }
     },
     methods: {
-      resetState () {
-        this.loaded = false
-        this.showError = false
+      resetState() {
+        this.loaded = false;
+        this.showError = false;
       },
-      requestData () {
+      requestData() {
         if (this.inputtedPackage === null || this.inputtedPackage === '' || this.inputtedPackage === 'undefined') {
-          this.showError = true
-          return
+          this.showError = true;
+          return;
         }
-        this.resetState()
-        this.loading = true
+        this.resetState();
+        this.loading = true;
         axios.get(`https://api.npmjs.org/downloads/range/${this.period}/${this.inputtedPackage}`)
           .then(response => {
-            // console.log(response.data);
-            this.rawData = response.data.downloads
-            this.downloads = response.data.downloads.map(entry => entry.downloads)
-            this.labels = response.data.downloads.map(entry => entry.day)
-            this.packageName = response.data.package
-            this.totalDownloads = this.downloads.reduce((total, download) => total + download)
-            this.setURL()
-            this.groupDataByDate()
-            this.loaded = true
-            this.loading = false
+            this.rawData = response.data.downloads;
+            // console.log(`requestData() - rawData: ${JSON.stringify(this.rawData, null, 4)}`);
+            this.downloads = response.data.downloads.map(entry => entry.downloads);
+            this.labels = response.data.downloads.map(entry => entry.day);
+            this.packageName = response.data.package;
+            this.totalDownloads = this.downloads.reduce((total, download) => total + download);
+            this.setURL();
+            this.groupDataByDate();
+            this.loaded = true;
+            this.loading = false;
           })
           .catch(err => {
             this.errorMessage = err.response.data.error
             this.showError = true
           })
       },
-      validateDataRequest () {
-        console.log('ValidateData')
+      validateDataRequest() {
         if (this.packageName !== '' && this.periodStart !== '') {
-          this.requestData()
+          this.requestData();
         }
       },
-      groupDataByDate () {
-        this.formatYear()
-        this.formatMonth()
-        this.formatWeek()
+      groupDataByDate() {
+        this.formatYear();
+        this.formatMonth();
+        this.formatWeek();
       },
-      formatYear () {
-        console.log(this.rawData);
-        // debugger;
+      formatYear() {
         this.labelsYear = this.rawData
-          .map(entry => {
-            console.log(entry.day);
-            console.log(dateToYear(entry.day));
-            return dateToYear(entry.day);
-          }
-          )
-          .reduce(removeDuplicate, [])
-        this.downloadsYear = groupData(this.rawData, dateToYear)
+                            .map(entry => dateToYear(entry.day))
+                            .reduce(removeDuplicate, []);
+        this.downloadsYear = groupData(this.rawData, dateToYear);
       },
-      formatMonth () {
+      formatMonth() {
         this.labelsMonth = this.rawData
-          .map(entry => dateToMonth(entry.day))
-          .reduce(removeDuplicate, [])
-        this.downloadsMonth = groupData(this.rawData, dateToMonth)
+                            .map(entry => dateToMonth(entry.day))
+                            .reduce(removeDuplicate, []);
+        this.downloadsMonth = groupData(this.rawData, dateToMonth);
       },
-      formatWeek () {
+      formatWeek() {
         this.labelsWeek = this.rawData
-          .map(entry => dateToWeek(entry.day))
-          .reduce(removeDuplicate, [])
-        this.downloadsWeek = groupData(this.rawData, dateToWeek)
+                            .map(entry => dateToWeek(entry.day))
+                            .reduce(removeDuplicate, []);
+        this.downloadsWeek = groupData(this.rawData, dateToWeek);
       },
-      setURL () {
-        history.pushState({ info: `npm-stats ${this.inputtedPackage}` }, this.inputtedPackage, `/#/${this.inputtedPackage}`)
+      setURL() {
+        history.pushState({ info: `npm-stats ${this.inputtedPackage}` }, this.inputtedPackage, `/mynpmstats/#/${this.inputtedPackage}`);
       },
       toggleSettings () {
-        this.showSettings = !this.showSettings
-        this.$ga.event({
-          eventCategory: 'Settings',
-          eventAction: 'toggle'
-        })
+        this.showSettings = !this.showSettings;
       }
     }
   }
