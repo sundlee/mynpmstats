@@ -1,10 +1,10 @@
 <script>
   import { Line } from 'vue-chartjs'
-  // import Printable from '@/mixins/Printable'
+  import "chartjs-plugin-deferred";
+  import "chartjs-plugin-crosshair";
 
   export default {
     extends: Line,
-    // mixins: [Printable],
     props: {
       chartData: {
         type: Array,
@@ -43,6 +43,9 @@
             }]
           },
           tooltips: {
+            mode: 'interpolate',
+            intersect: false,
+
             backgroundColor: '#4F5565',
             titleFontStyle: 'normal',
             titleFontSize: 14,
@@ -53,8 +56,8 @@
             xPadding: 14,
             yPadding: 14,
             displayColors: false,
-            mode: 'index',
-            intersect: false,
+            // mode: 'index',
+            // intersect: false,
             callbacks: {
               title: tooltipItem => {
                 return `🗓 ${tooltipItem[0].xLabel}`
@@ -70,7 +73,39 @@
             display: false
           },
           responsive: true,
-          maintainAspectRatio: false
+          maintainAspectRatio: false,
+          plugins: {
+            deferred: {
+              xOffset: 150,   // defer until 150px of the canvas width are inside the viewport
+              yOffset: '50%', // defer until 50% of the canvas height are inside the viewport
+              delay: 500      // delay of 500 ms after the canvas is considered inside the viewport
+            },
+            crosshair: {
+              line: {
+                color: '#454D55',  // crosshair line color
+                width: 1        // crosshair line width
+              },
+              sync: {
+                enabled: true,            // enable trace line syncing with other charts
+                group: 1,                 // chart group
+                suppressTooltips: false   // suppress tooltips when showing a synced tracer
+              },
+              zoom: {
+                enabled: true,                                      // enable zooming
+                zoomboxBackgroundColor: 'rgba(66,133,244,0.2)',     // background color of zoom box 
+                zoomboxBorderColor: '#48F',                         // border color of zoom box
+                zoomButtonText: 'Reset Zoom',                       // reset zoom button text
+                zoomButtonClass: 'reset-zoom',                      // reset zoom button class
+              },
+              callbacks: {
+                beforeZoom: function() {                  // called before zoom, return false to prevent zoom
+                  return true;
+                },
+                afterZoom: function() {                   // called after zoom
+                }
+              }
+            }
+          }
         }
       }
     },
